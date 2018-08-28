@@ -14,7 +14,7 @@ TNRSbatch accepts one or more taxonomic names as input, matching each name again
 
 Prior to matching, names strings are parsed to the taxon from the authority, and the different name components (representing different levels of the taxonomic hierarchy) are separated. For example, the name "Poa annua var. supina" is parsed as genus="Poa", specific epithet="annua", infraspecific taxon='supina' and infraspecific rank = 'variety'. Parsing allows a name to be partially matched to a higher taxon with the lower taxon cannot be resolved. Matching is performed using a fuzzy-matching algorithm which improves performance by searching within the taxonomic hierarchy, and efficiently handles spelling and formulation errors specific to taxonomic names. 
 
-Input is a plain text file of one or more taxonomic names, one name per line. Names may be preceded by a unique integer identifier. This identifier and name MUST be separate by a pipe ('|') delimiter. Location of this file can be specified as a command-line parameter.
+Input is a plain text file of one or more taxonomic names, one name per line. Currently, names MUST be preceded by a unique integer identifier. This identifier and name MUST be separate by a pipe ('|') delimiter. Location of this file can be specified as a command-line parameter. See example file in directory example_data/.
 
 Output is a comma- or tab-delimited file, similar in format to a download from the TNRS web user interface, using options "All matches" and "Detailed". Location of this file can be specified as a command-line parameter.
 
@@ -52,7 +52,7 @@ d |  Delimiter to use for output file [comma*,tab]
 #### Example replicating default online TNRS settings:  
 
 ```
-./controller.pl -in "../example_data_testfile"  -out "../example_data_testfile_scrubbed.csv" -sources "tropicos,ildis,gcc,tpl,usda,ncbi" -class "tropicos" -nbatch 10 -d t 
+./controller.pl -in "../example_data/testfile"  -out "../example_data/testfile_scrubbed.csv" -sources "tropicos,ildis,gcc,tpl,usda,ncbi" -class "tropicos" -nbatch 10 -d t 
 ```
 
 ### V. Notes
@@ -61,6 +61,4 @@ d |  Delimiter to use for output file [comma*,tab]
 
 2. Family classification source (command line option "class"). The short codes of the taxonomic database used to apply the family classification to each name. These codes are drawn directly from column "sourceName" in table source of the TNRS database. The source must also have a complete family classification in table higherClassification. This relationship is identified by the join source.sourceID=higherClassification.classificationSourceID.
 
-### Tips
-Family may be pre-pended to the scientific name, if desired. This will constrain the match to fall within the family.
-*  
+3. Family may be pre-pended to the scientific name (e.g., "Poaceae Poa annua"). This will constrain the genus and species matches that family only. Prevents spurious fuzzy matches to similarly-spelled taxa in other families.
