@@ -1,4 +1,4 @@
-#! /bin/env php
+#! /usr/bin/php
 <?php
 	ini_set("memory_limit","1000M");
 

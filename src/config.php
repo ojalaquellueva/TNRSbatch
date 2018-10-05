@@ -8,7 +8,7 @@
 		'default' => array(
 			  'db_type' => 'mysql'
 			, 'username'=> 'tnrs'
-			, 'pass' => 'tnrs'
+			, 'pass' => 'tnrs_read'
 			, 'db_name'=> 'tnrs4'
 			, 'name' => 'default database'
 			, 'id' => 1

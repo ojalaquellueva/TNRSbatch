@@ -2,8 +2,8 @@
 
 ### Contents
 
-I. Purpose
-II. Background
+I. Purpose  
+II. Background  
 III. Dependencies  
 IV. Usage  
 V. Notes  

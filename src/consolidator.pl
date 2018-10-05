@@ -1,4 +1,4 @@
-#!/bin/env perl
+#! /usr/bin/perl
 #consolidator.pl: Consolidator for the iPlant TNRS batch service.
 #Author: Naim Matasci <nmatasci@iplantcollaborative.org>
 #

@@ -1,4 +1,5 @@
-#! /bin/env perl
+#! /usr/bin/perl
+# Previously: bin/env perl
 #controller.pl: Controller for the iPlant TNRS batch service.
 #Author: Naim Matasci <nmatasci@iplantcollaborative.org>
 #
