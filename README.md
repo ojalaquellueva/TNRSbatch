@@ -30,13 +30,37 @@ This version of TNRSbatch is a fork of the original TNRSbatch developed by Naim 
 
 TNRSbatch requires a connection to a fully-populated MySQL TNRS database. The TNRS database is constructed using the PHP code in directory tnrs3_db_scripts or the online TNRS repository (https://github.com/iPlantCollaborativeOpenSource/TNRS/tree/master/tnrs3_db_scripts). 
 
+#### 2. GN Name parser (biodiversity)
+
+* TNRSbatch requires the GN name parser running as a socket server. Name parser repository:
+
+https://github.com/GlobalNamesArchitecture/biodiversity
+
+* Install the parser (assumes ruby installed on local system):
+
+```
+sudo gem install biodiversity
+```
+
+* Start the service:
+
+``` 
+parserver &
+<ctrl>+C
+```
+
+
 ### IV. Usage
+
+1. Run the full batch application  
+
+Invokes taxamatch_superbatch.php & parallelizes the operation using makeflow.
 
 ```
 ./controller.pl -in <input_filename_and_path> -sources <tnrs_source_list> -out "data/tnrsbatch_scrubbed.csv" -out <output_filename_and_path> -class "tropicos" -nbatch <batches> -opt <makeflow_options> -d <output_file_delimiter>
 
 ```
-#### Options (*=default):
+#### Options (*=default):  
 
 Option | Meaning
 --- | ---
@@ -52,13 +76,34 @@ d |  Delimiter to use for output file [comma*,tab]
 #### Example replicating default online TNRS settings:  
 
 ```
-./controller.pl -in "../example_data/testfile"  -out "../example_data/testfile_scrubbed.csv" -sources "tropicos,ildis,gcc,tpl,usda,ncbi" -class "tropicos" -nbatch 10 -d t 
+./controller.pl -in "../example_data/testfile"  -out "../example_data/testfile_scrubbed.csv" -sources "tropicos,ildis,gcc,tpl,usda,ncbi" -class tropicos -nbatch 10 -d t 
 ```
+
+2. Run the php core application standalone  
+
+This is the core application invoked by controller.pl.
+
+```
+php taxamatch_superbatch.php -s <sources> -f <input_file> -o <output_file> [-l <classification>] [-m] [-p] [-d]
+```
+
+#### Core application options (*=default):
+
+Option |	Required?	|	Meaning
+--- | --- | ---
+f	| Y | Input file name. Include path if in different directory.  
+o	| Y | Output file name. Include path if in different directory.  
+s	| Y | Taxonomic sources. One or more, comma-delimitted. See Notes.  	
+l	| N | Source of family classification [tropicos*,ncbi]. See Notes.  
+m	| N | Best match only (returns all matches if omitted)
+p	| N | Parse only (resolves to matched and accepted names if omitted)
+d	| N | Delimiter to use for output file [c* (comma),t (tab)]
+
 
 ### V. Notes
 
-1. Taxonomic sources (command line option "sources") are the short codes for the taxonomic databases, as loaded to the TNRS database, that will be consulted to resolve the name. These codes are drawn directly from the TNRS database, as per column "sourceName" of table source.
+1. Taxonomic sources (command line option "sources") are the short codes for the taxonomic databases, as loaded to the TNRS database, that will be consulted to resolve the name. These codes are drawn directly from the TNRS database, as per column "sourceName" of table source. Current values: tropicos, tpl, gcc, ildis, usda, ncbi. See TNRS website for details.
 
-2. Family classification source (command line option "class"). The short codes of the taxonomic database used to apply the family classification to each name. These codes are drawn directly from column "sourceName" in table source of the TNRS database. The source must also have a complete family classification in table higherClassification. This relationship is identified by the join source.sourceID=higherClassification.classificationSourceID.
+2. Family classification source (command line option "class"). The short codes of the taxonomic database used to apply the family classification to each name. These codes are drawn directly from column "sourceName" in table source of the TNRS database. The source must also have a complete family classification in table higherClassification. This relationship is identified by the join source.sourceID=higherClassification.classificationSourceID. 
 
 3. Family may be pre-pended to the scientific name (e.g., "Poaceae Poa annua"). This will constrain the genus and species matches that family only. Prevents spurious fuzzy matches to similarly-spelled taxa in other families.
