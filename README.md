@@ -1,4 +1,4 @@
-# Batch service for the iPlant TNRS
+# Taxonomic Name Resolution Service (TNRS) Batch Application
 
 ### Contents
 
