@@ -45,7 +45,7 @@ sudo gem install biodiversity
 * Start the service:
 
 ``` 
-parserver &
+nohup parserver &
 <ctrl>+C
 ```
 
@@ -54,7 +54,7 @@ parserver &
 
 1. Run the full batch application  
 
-Invokes taxamatch_superbatch.php & parallelizes the operation using makeflow.
+"controller.pl" is the main application. Invokes "taxamatch_superbatch.php" & parallelizes the operation using makeflow.
 
 ```
 ./controller.pl -in <input_filename_and_path> -sources <tnrs_source_list> -out "data/tnrsbatch_scrubbed.csv" -out <output_filename_and_path> -class "tropicos" -nbatch <batches> -opt <makeflow_options> -d <output_file_delimiter>
@@ -81,7 +81,7 @@ d |  Delimiter to use for output file [comma*,tab]
 
 2. Run the php core application standalone  
 
-This is the core application invoked by controller.pl.
+"taxamatch_superbatch.php" is the core application invoked by controller.pl. Most users won't need this except for testing changes to core service code.
 
 ```
 php taxamatch_superbatch.php -s <sources> -f <input_file> -o <output_file> [-l <classification>] [-m] [-p] [-d]
