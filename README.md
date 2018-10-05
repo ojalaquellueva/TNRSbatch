@@ -90,7 +90,7 @@ php taxamatch_superbatch.php -s <sources> -f <input_file> -o <output_file> [-l <
 #### Core application options (*=default):
 
 Option |	Required?	|	Meaning
---- | --- | ---
+--- | :---: | ---
 f	| Y | Input file name. Include path if in different directory.  
 o	| Y | Output file name. Include path if in different directory.  
 s	| Y | Taxonomic sources. One or more, comma-delimitted. See Notes.  	
