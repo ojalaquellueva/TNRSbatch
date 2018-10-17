@@ -796,8 +796,7 @@
 						        if (!array_key_exists($drec->genus_id,$genus_matches)) {
 									$phonetic_flag = $genus_match['phonetic_match'] ? 'Y' : null;
 									$this->saveGenusMatches($drec->genus_id, $drec->genus, $genus_match['edit_distance'], $phonetic_flag);
-									# Commenting out next line to suppress warnings
-									#$this->genera_tested++;
+									$this->genera_tested++;
 								}
 								$genus_matches[$drec->genus_id] = $genus_match;
 							}
@@ -816,8 +815,7 @@
 									if (!array_key_exists($drec->species_id,$species_matches)) {
 										$binomial_phonetic_flag = $binomials_match['phonetic_match'] ? 'Y' : null;
 										$this->saveSpeciesMatches($drec->species_id, $drec->genus_species, $genus_match['edit_distance'], $species_epithets_match['edit_distance'], $binomials_match['edit_distance'], $binomial_phonetic_flag);
-										# Commenting out next line to suppress warnings
-										#$this->species_tested++;
+										$this->species_tested++;
 									}
 									$species_epithets_match['genus_match']=$genus_match;
 									$species_matches[$drec->species_id]=$species_epithets_match;
