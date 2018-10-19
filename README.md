@@ -7,22 +7,27 @@ II. Background
 III. Dependencies  
 IV. Usage  
 V. Notes  
+VI. References  
 
 ### I. Purpose
 
-TNRSbatch accepts one or more taxonomic names as input, matching each name against a master list of published taxonomic names, and updating any synonym names to the current accepted name. 
+TNRSbatch is an application for correcting and standardizing taxonomic names. TNRSbatch accepts one or more taxonomic names as input, matching each name against a master list of published taxonomic names and updating synonyms to the current accepted name. 
 
-Prior to matching, names strings are parsed to the taxon from the authority, and the different name components (representing different levels of the taxonomic hierarchy) are separated. For example, the name "Poa annua var. supina" is parsed as genus="Poa", specific epithet="annua", infraspecific taxon='supina' and infraspecific rank = 'variety'. Parsing allows a name to be partially matched to a higher taxon with the lower taxon cannot be resolved. Matching is performed using a fuzzy-matching algorithm which improves performance by searching within the taxonomic hierarchy, and efficiently handles spelling and formulation errors specific to taxonomic names. 
+TNRSbatch resolves names in three main steps: parsing, matching and updating. In the matching step, names strings are parsed to separate the taxon from the authority, using the Ruby gem version ("biodiversity") of the GNParser (Mozzherin 2008). Name components representing different levels of the taxonomic hierarchy are also separated, as well as annotations such as "cf.", "aff.", "sp. nov.",  etc. For example, the name "Poa annua var. supina" is parsed as genus="Poa", specific epithet="annua", infraspecific taxon='supina' and infraspecific rank = 'variety'. Parsing allows a name to be matched to a higher taxon when the lower taxon cannot be resolved. 
 
-Input is a plain text file of one or more taxonomic names, one name per line. Currently, names MUST be preceded by a unique integer identifier. This identifier and name MUST be separate by a pipe ('|') delimiter. Location of this file can be specified as a command-line parameter. See example file in directory example_data/.
+The matching step uses both exact and fuzzy matching to find the best match of the parsed name to published taxonomic names in the reference database. The fuzzy-matching algorithm (Taxamatch; see https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0107510)  improves performance by searching within the taxonomic hierarchy, and efficiently handles spelling and formulation errors specific to taxonomic names.
 
-Output is a comma- or tab-delimited file, similar in format to a download from the TNRS web user interface, using options "All matches" and "Detailed". Location of this file can be specified as a command-line parameter.
+In the update step, matched name which are synonyms are updated to the current accepted ("correct") name, according to the taxonomic sources consulted in the reference database.
+
+The input for TNRSbatch is a plain text file of one or more taxonomic names, one name per line, with or without authorities. If desired, the family may be prepended to the taxon name, separate by a single whitespace (e.g., "Poaceae Poa supina"). Including the family allows disambiguation of honomyms or similar names in different families. The file must have one name per line, and each name MUST be preceded by a unique integer identifier, separated from the name by a pipe ('|') delimiter. See example file in directory example_data/.
+
+TNRSbatch output is a comma- or tab-delimited file, similar in format and content to a download from the TNRS web user interface using options "All matches" and "Detailed" (http://tnrs.iplantcollaborative.org/). 
 
 ### II. Background
 
-TNRSbatch is a command line adaptation of the iPlant TNRS version 4.0 (http://tnrs.iplantcollaborative.org/), herein referred to as "online TNRS" (Repository: https://github.com/iPlantCollaborativeOpenSource/TNRS). TNRSbatch builds on the core TNRS services (GNI name parser and Taxamatch) and adds a wrapper that controls batch processing and multi-threading. Options originally set via the web interface are accepted as command line options. All key functionality available via the web interface is replicated by TNRSbatch. A MySQL TNRS database is also required (see Requirements, below).
+TNRSbatch is a command line adaptation of the Taxonomic Name Resolution Service (herein referred to as "online TNRS"; see Boyle et al. 2013). TNRSbatch includes all key features and options of the online TNRS, with added support for parallel processing. TNRSbatch builds on the core TNRS components (TNRS database, GNparser and Taxamatch), incorporation key algorithms previously embedded in the Java user interface in the online TNRS. Perl controller scripts add multi-threading capability using Makeflow. Options originally set via the web interface are accepted as command line options. All key functionality available via the web interface is replicated by TNRSbatch, in combination with the GNParser and MySQL TNRS database (see Requirements, below).
 
-This version of TNRSbatch is a fork of the original TNRSbatch developed by Naim Matasci and others (https://github.com/nmatasci/TNRSbatch). The main difference of this fork from the original is the addition of command line parameters that more fully replicate the functionality of the online TNRS. 
+This version of TNRSbatch is a fork of the original TNRSbatch developed by Naim Matasci and others (https://github.com/nmatasci/TNRSbatch). This fork updates code and adds command line parameters that more fully replicate the functionality of the online TNRS. 
 
 ### III. Dependencies
 
@@ -30,7 +35,7 @@ This version of TNRSbatch is a fork of the original TNRSbatch developed by Naim 
 
 TNRSbatch requires a connection to a fully-populated MySQL TNRS database. The TNRS database is constructed using the PHP code in directory tnrs3_db_scripts or the online TNRS repository (https://github.com/iPlantCollaborativeOpenSource/TNRS/tree/master/tnrs3_db_scripts). 
 
-#### 2. GN Name parser (biodiversity)
+#### 2. GN parser (biodiversity)
 
 * TNRSbatch requires the GN name parser running as a socket server. Name parser repository:
 
@@ -79,7 +84,7 @@ d |  Delimiter to use for output file [comma*,tab]
 ./controller.pl -in "../example_data/testfile"  -out "../example_data/testfile_scrubbed.csv" -sources "tropicos,ildis,gcc,tpl,usda,ncbi" -class tropicos -nbatch 10 -d t 
 ```
 
-2. Run the php core application standalone  
+2. Run the core batch processing application as a standalone  
 
 "taxamatch_superbatch.php" is the core application invoked by controller.pl. Most users won't need this except for testing changes to core service code.
 
@@ -102,8 +107,17 @@ d	| N | Delimiter to use for output file [c* (comma),t (tab)]
 
 ### V. Notes
 
-1. Taxonomic sources (command line option "sources") are the short codes for the taxonomic databases, as loaded to the TNRS database, that will be consulted to resolve the name. These codes are drawn directly from the TNRS database, as per column "sourceName" of table source. Current values: tropicos, tpl, gcc, ildis, usda, ncbi. See TNRS website for details.
+1. Taxonomic sources (command line option "sources") are short codes for the taxonomic sources in the TNRS database that will be consulted to resolve the name. These codes are drawn directly from the TNRS database, as per column "sourceName" of table "source". Current values: 'tropicos, tpl, gcc, ildis, usda, ncbi. Sources code parameters are submitted as a comma delimited list surround by quotes: e.g., 'tropicos,tpl,usda'. See online TNRS website for more information on each source (http://tnrs.iplantcollaborative.org/sources.html).
 
-2. Family classification source (command line option "class"). The short codes of the taxonomic database used to apply the family classification to each name. These codes are drawn directly from column "sourceName" in table source of the TNRS database. The source must also have a complete family classification in table higherClassification. This relationship is identified by the join source.sourceID=higherClassification.classificationSourceID. 
+2. Family classification source (command line option "class"). The short codes of the taxonomic database used to apply the family classification to each name. These codes are drawn directly from column "sourceName" in table source of the TNRS database. The source must also have a complete family classification in table higherClassification. This relationship is identified by the join source.sourceID=higherClassification.classificationSourceID. See http://tnrs.iplantcollaborative.org/instructions.html#classification for details.
 
-3. Family may be pre-pended to the scientific name (e.g., "Poaceae Poa annua"). This will constrain the genus and species matches that family only. Prevents spurious fuzzy matches to similarly-spelled taxa in other families.
+3. Family may be pre-pended to the scientific name (e.g., "Poaceae Poa annua"). This will constrain the genus and species matches that family only. Including family prevents spurious matches to homonyms or similarly-spelled taxa in different families.
+
+### VI. References  
+
+﻿Boyle, B., N. Hopkins, Z. Lu, J. A. Raygoza Garay, D. Mozzherin, T. Rees, N. Matasci, M. L. Narro, W. H. Piel, S. J. Mckay, S. Lowry, C. Freeland, R. K. Peet, and B. J. Enquist. 2013. The taxonomic name resolution service: An online tool for automated standardization of plant names. BMC Bioinformatics 14(1):16.
+
+Mozzherin, D. Y. 2008. GlobalNamesArchitecture/biodiversity: Scientific Name Parser. https://
+github.com/GlobalNamesArchitecture/biodiversity. Accessed 15 Sep 2017
+
+Rees, T. 2014. Taxamatch, an Algorithm for Near ('Fuzzy’) Matching of Scientific Names in Taxonomic Databases. PloS one 9(9): e107510.
