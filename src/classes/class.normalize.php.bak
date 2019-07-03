@@ -152,18 +152,15 @@
 					$temp = 'Linnaeus';
 					$this->debug['normalize_auth'][] = "3a (temp:$temp)";
 //				} elseif ( $temp like '(L.)%' ) {
-//				} elseif ( ereg('^\(L\.\)', $temp) ) {
-				} elseif ( preg_match('/^\(L\.\)/', $temp) ) {
+				} elseif ( ereg('^\(L\.\)', $temp) ) {
 					$temp = '(Linnaeus)' . substr($temp,5);
 					$this->debug['normalize_auth'][] = "3b (temp:$temp)";
 //				} elseif ( ( $temp like 'L., 1%' ) || ( $temp like 'L. 1%' ) ) {
-//				} elseif ( ereg('^L\., 1', $temp) || ereg('^L\. 1', $temp) ) {
-				} elseif ( preg_match('/^L\., 1/', $temp) || preg_match('/^L\. 1/', $temp) ) {
+				} elseif ( ereg('^L\., 1', $temp) || ereg('^L\. 1', $temp) ) {
 					$temp = 'Linnaeus ' . substr($temp,3);				
 					$this->debug['normalize_auth'][] = "3c (temp:$temp)";
 //				} elseif ( $temp like '(L., 1%' ) || ( $temp like '(L. 1%' ) {
-//				} elseif ( ereg('^\(L\., 1', $temp) || ereg('^\(L\. 1', $temp) ) {
-				} elseif ( preg_match('/^\(L\., 1/', $temp) || preg_match('/^\(L\. 1/', $temp) ) {
+				} elseif ( ereg('^\(L\., 1', $temp) || ereg('^\(L\. 1', $temp) ) {
 					$temp = '(Linnaeus ' . substr($temp,4);
 					$this->debug['normalize_auth'][] = "3d (temp:$temp)";
 				} elseif ( ( $temp == 'DC' ) || ( $temp == '(DC)' ) ) {
@@ -180,8 +177,7 @@
 				
 				//normalise "et", "and" to ampersand (et al. is a special case)
 //				if ( $temp like '% et al%' ) {
-//				if ( ereg(' et al', $temp) ) {
-				if ( preg_match('/ et al/', $temp) ) {
+				if ( ereg(' et al', $temp) ) {
 					$temp = str_replace(' et al','zzzzz', $temp);
 					$this->debug['normalize_auth'][] = "4a (temp:$temp)";
 				}
@@ -199,26 +195,25 @@
 				
 				//remove commas before dates (only)
 				//	like '%, 17%'
-//				if ( ereg(', 17', $temp) ) {
-				if ( preg_match('/, 17/', $temp) ) {
+				if ( ereg(', 17', $temp) ) {
 					$temp = str_replace(', 17',' 17', $temp);
 					$this->debug['normalize_auth'][] = "5a (temp:$temp)";
 				}
 				
 				//	like '%, 18%'
-				if ( preg_match('/, 18/', $temp) ) {
+				if ( ereg(', 18', $temp) ) {
 					$temp = str_replace(', 18',' 18', $temp);
 					$this->debug['normalize_auth'][] = "5b (temp:$temp)";
 				}
 				
 				//	like '%, 19%'
-				if ( preg_match('/, 19/', $temp) ) {
+				if ( ereg(', 19', $temp) ) {
 					$temp = str_replace(', 19',' 19', $temp);
 					$this->debug['normalize_auth'][] = "5c (temp:$temp)";
 				}
 				
 				//	like '%, 20%'
-				if ( preg_match('/, 20/', $temp) ) {
+				if ( ereg(', 20', $temp) ) {
 					$temp = str_replace(', 20',' 20', $temp);
 					$this->debug['normalize_auth'][] = "5d (temp:$temp)";
 				}
@@ -237,14 +232,14 @@
 					$this->debug['normalize_auth'][] = "7 (this_word:$this_word)";
 					
 					//	like '(%'
-					if ( preg_match('/^\(/', $this_word) ) {
+					if ( ereg('^\(', $this_word) ) {
 						$elapsed_chars .= '(';
 						$this_word = substr( $this_word, 1 );
 						$this->debug['normalize_auth'][] = "7a (this_word:$this_word) (elapsed_chars:$elapsed_chars)";
 					}
 
 					// like '%.%' AND 2 or more characters					
-					if ( preg_match('/\./', $this_word) && ( strlen($this_word) >= 2 ) ) {
+					if ( ereg('\.', $this_word) && ( strlen($this_word) >= 2 ) ) {
 					
 						// See if there is a Full Author name in the authoritative db that matches the abbrivation
 						//$this_auth_full = $this->db->get_auth_full( $this_word );

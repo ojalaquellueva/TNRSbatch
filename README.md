@@ -25,7 +25,7 @@ TNRSbatch output is a comma- or tab-delimited file, similar in format and conten
 
 ### II. Background
 
-TNRSbatch is a command line adaptation of the Taxonomic Name Resolution Service (herein referred to as "online TNRS"; see Boyle et al. 2013). TNRSbatch includes all key features and options of the online TNRS, with added support for parallel processing. TNRSbatch builds on the core TNRS components (TNRS database, GNparser and Taxamatch), incorporation key algorithms previously embedded in the Java user interface in the online TNRS. Perl controller scripts add multi-threading capability using Makeflow. Options originally set via the web interface are accepted as command line options. All key functionality available via the web interface is replicated by TNRSbatch, in combination with the GNParser and MySQL TNRS database (see Requirements, below).
+TNRSbatch is a command line fork of the Taxonomic Name Resolution Service (herein referred to as "online TNRS"; see Boyle et al. 2013). TNRSbatch includes all key features and options of the online TNRS, with added support for parallel processing. TNRSbatch builds on the core TNRS components (TNRS database, GNparser and Taxamatch), plus key algorithms previously embedded in the Java user interface of the online TNRS. Perl controller scripts add multi-threading capability using Makeflow. Options originally selected via the web interface are set as command line options. All key functionality available in the web interface is replicated by the combination of TNRSbatch, GNParser and TNRS database (see Dependencies, below).
 
 This version of TNRSbatch is a fork of the original TNRSbatch developed by Naim Matasci and others (https://github.com/nmatasci/TNRSbatch). This fork updates code and adds command line parameters that more fully replicate the functionality of the online TNRS. 
 
@@ -54,18 +54,29 @@ nohup parserver &
 <ctrl>+C
 ```
 
+### IV. OS & software requirements
+
+* Ubuntu 16+ (not test on earlier versions or other \*nix OSs)  
+* Perl (tested on 5.26.1)  
+* PHP (tested on 7.2.19)  
+* MySQL (tested on 5.7.26)  
+* Makeflow (tested on 4.0.0-RELEASE (released 02/06/2018))  
+* Ruby (tested on 2.5.1p57)  
 
 ### IV. Usage
 
-1. Run the full batch application  
+####1. Run the multi-threaded batch application  
 
 "controller.pl" is the main application. Invokes "taxamatch_superbatch.php" & parallelizes the operation using makeflow.
+
+**Syntax**  
 
 ```
 ./controller.pl -in <input_filename_and_path> -sources <tnrs_source_list> -out "data/tnrsbatch_scrubbed.csv" -out <output_filename_and_path> -class "tropicos" -nbatch <batches> -opt <makeflow_options> -d <output_file_delimiter>
 
 ```
-#### Options (*=default):  
+**Options**  
+(*=default)  
 
 Option | Meaning
 --- | ---
@@ -78,18 +89,27 @@ opt	| Makeflow options [not sure what these are]
 d |  Delimiter to use for output file [comma*,tab]
  
 
-#### Example replicating default online TNRS settings:  
+**Example replicating default online TNRS settings**  
 
 ```
 ./controller.pl -in "../example_data/testfile"  -out "../example_data/testfile_scrubbed.csv" -sources "tropicos,ildis,gcc,tpl,usda,ncbi" -class tropicos -nbatch 10 -d t 
 ```
 
-2. Run the core batch processing application as a standalone  
+####2. Run the core batch application as a standalone  
 
 "taxamatch_superbatch.php" is the core application invoked by controller.pl. Most users won't need this except for testing changes to core service code.
 
+**Syntax**
+
+```
+php taxamatch_superbatch.php -s "tropicos,ildis,gcc,tpl,usda,ncbi" -f "../example_data/testfile" -o "../example_data/testfile_scrubbed.csv" 
+```
+
+**Example**
+
 ```
 php taxamatch_superbatch.php -s <sources> -f <input_file> -o <output_file> [-l <classification>] [-m] [-p] [-d]
+
 ```
 
 #### Core application options (*=default):
