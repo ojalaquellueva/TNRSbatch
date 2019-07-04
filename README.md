@@ -85,7 +85,7 @@ out	| Output file name. Include path if in different directory.
 sources	| Taxonomic sources. See Notes.  	
 class	| Source of family classification [tropicos*,ncbi]. See Notes.  
 nbatch	| Number of batches to split the file into
-opt	| Makeflow options [not sure what these are]
+opt	| Makeflow options (see https://ccl.cse.nd.edu/software/manuals/man/makeflow.html for details)
 d |  Delimiter to use for output file [comma*,tab]
  
 
