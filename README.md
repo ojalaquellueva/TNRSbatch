@@ -65,7 +65,7 @@ nohup parserver &
 
 ### IV. Usage
 
-####1. Run the multi-threaded batch application  
+#### 1. Run the multi-threaded batch application  
 
 "controller.pl" is the main application. Invokes "taxamatch_superbatch.php" & parallelizes the operation using makeflow.
 
@@ -95,7 +95,7 @@ d |  Delimiter to use for output file [comma*,tab]
 ./controller.pl -in "../example_data/testfile"  -out "../example_data/testfile_scrubbed.csv" -sources "tropicos,ildis,gcc,tpl,usda,ncbi" -class tropicos -nbatch 10 -d t 
 ```
 
-####2. Run the core batch application as a standalone  
+#### 2. Run the core batch application as a standalone  
 
 "taxamatch_superbatch.php" is the core application invoked by controller.pl. Most users won't need this except for testing changes to core service code.
 
