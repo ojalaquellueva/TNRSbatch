@@ -102,15 +102,15 @@ d |  Delimiter to use for output file [comma*,tab]
 **Syntax**
 
 ```
-php taxamatch_superbatch.php -s "tropicos,ildis,gcc,tpl,usda,ncbi" -f "../example_data/testfile" -o "../example_data/testfile_scrubbed.csv" 
+php taxamatch_superbatch.php -s <sources> -f <input_file> -o <output_file> [-l <classification>] [-m] [-p] [-d]
 ```
 
 **Example**
 
 ```
-php taxamatch_superbatch.php -s <sources> -f <input_file> -o <output_file> [-l <classification>] [-m] [-p] [-d]
-
+php taxamatch_superbatch.php -s "tropicos,ildis,gcc,tpl,usda,ncbi" -f "../example_data/testfile" -o "../example_data/testfile_scrubbed.csv" 
 ```
+
 
 #### Core application options (*=default):
 

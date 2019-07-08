@@ -431,7 +431,7 @@ class MysqliDatabase extends mysqli
     * @param string $Query
     * @return mixed
     */
-	public function query($Query, $resultmode = NULL)
+	public function query($Query)
 	{
 		if ($Query == '') return;
 		
@@ -441,7 +441,7 @@ class MysqliDatabase extends mysqli
 				return null;
 		}
 
-		$Ret = parent::query($Query, $resultmode = NULL);
+		$Ret = parent::query($Query);
 		
 		$allow_err = array(1062);
 		
@@ -463,9 +463,9 @@ class MysqliDatabase extends mysqli
     * @param string $Query
     * @return mixed NULL if there are no rows, object otherwise
     */
-	public function query_one($Query, $resultmode = NULL)
+	public function query_one($Query)
 	{
-	    $Ret = $this->query($Query, $resultmode = NULL);
+	    $Ret = $this->query($Query);
 	    if (is_object($Ret)) return $Ret->fetch_object();
 	    return null;
 	}
@@ -475,9 +475,9 @@ class MysqliDatabase extends mysqli
     * @param string $Query
     * @return mixed NULL if there are no rows, array of objects otherwise
     */
-	public function query_all($Query, $resultmode = NULL)
+	public function query_all($Query)
 	{
-		$Ret = $this->query($Query, $resultmode = NULL);
+		$Ret = $this->query($Query);
 		if (!is_object($Ret)) return null;
 		
 		$Rows = array();
@@ -497,7 +497,7 @@ class MysqliDatabase extends mysqli
     */
 	public function query_value($Query, $Type)
 	{
-		$Ret = $this->query_one($Query, $resultmode = NULL);
+		$Ret = $this->query_one($Query);
 		if (null !== $Ret)
 		{
 			foreach ($Ret as $Field)
@@ -514,9 +514,9 @@ class MysqliDatabase extends mysqli
     * @param string $Query
     * @return int The number of affected rows
     */
-	public function query_affected($Query, $resultmode = NULL)
+	public function query_affected($Query)
 	{
-		$this->query($Query, $resultmode = NULL);
+		$this->query($Query);
 		return $this->affected_rows;
 	}
 	
