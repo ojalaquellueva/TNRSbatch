@@ -25,6 +25,7 @@ my $infile  = '';    #Input file
 my $nbatch  = '';    #Number of batches
 my @sources = '';    #Sources, comma separate
 my $classification;  #Classification
+my $mode;  		 #Processing mode
 my $mf_opt  = '';    #makeflow options - optional
 my $outfile = '';    #Optput file - optional
 my $d = '';          #Output file delimiter - optional
@@ -34,6 +35,7 @@ GetOptions(
 	'nbatch=i'  => \$nbatch,
 	'sources=s' => \@sources,
 	'class=s'   => \$classification,
+	'mode=s'    => \$mode,
 	'opt:s'     => \$mf_opt,
 	'out:s'     => \$outfile,
 	'd:s'	    => \$d,
@@ -61,6 +63,17 @@ if ( !$outfile ) {
 if ( !$d ) {
 	$d = 't';
 }
+
+# Set processing mode
+if ( !$mode ) {
+	$mode = '';		# no parameter: default $mode='resolve'
+} else {
+	if ( $mode == 'parse' ) {
+		$mode = '-p parse';
+	} else {
+		$mode = '';	# default: $mode='resolve'
+	}
+} 
 
 #Check for valid delimiter
 if ( ( $d ne 't' ) && ( $d ne 'c' ) ) {
@@ -208,7 +221,7 @@ sub _generate_mfconfig {
 		my $operation =
 		  "$tmpfolder/out_$i.txt: $tmpfolder/names/in_$i.txt \$TNRSBIN\n"; #Line 1: output and input files
 		$operation .=
-"\t\$TNRSBIN -f $tmpfolder/names/in_$i.txt -s $sources -l $classification -o $tmpfolder/out_$i.txt -d $d\n\n"; #Line 2: command
+"\t\$TNRSBIN -f $tmpfolder/names/in_$i.txt -s $sources -l $classification $mode -o $tmpfolder/out_$i.txt -d $d\n\n"; #Line 2: command
 		$cmd = $cmd . $operation;
 		$filelist .= "$tmpfolder/out_$i.txt ";
 	}

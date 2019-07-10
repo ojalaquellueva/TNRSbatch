@@ -73,7 +73,6 @@ nohup parserver &
 
 ```
 ./controller.pl -in <input_filename_and_path> -sources <tnrs_source_list> -out "data/tnrsbatch_scrubbed.csv" -out <output_filename_and_path> -class "tropicos" -nbatch <batches> -opt <makeflow_options> -d <output_file_delimiter>
-
 ```
 **Options**  
 (*=default)  
