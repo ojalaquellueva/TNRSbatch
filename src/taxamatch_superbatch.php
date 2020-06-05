@@ -16,7 +16,7 @@
 	// 		(what about "extended" mode? See class.taxamatch.php.
 	//  m  Matches to return: a (all) | b* (best match only)
 	//  p  Parse-only: p (parse only)
-	//  c  *Count ???
+	//  c  *Count: Prepend integer ID to each line
 	//  l  *Family classification: tropicos* | ncbi
 	//  f  Path and name of input file
 	//  o  *Path and name of output file
@@ -26,7 +26,9 @@
 	///////////////////////////////////////////////////////////////
 	
 	// Get options, set defaults for optional parameters
-	$options = getopt("s:m:p:c:l:f:o:d:");
+	//$options = getopt("s:m:p:c:l:f:o:d:");
+	$options = getopt("s:f:l:r:m:p:c:o:d:");
+
 	$source=$options["s"];
 	$file=$options["f"];
 	$classification=isset($options["l"]) ? $options["l"] : "";
@@ -52,9 +54,15 @@
 	}
 	
 	$header=TnrsAggregator::$field;
+	# Hack to fix parse-only header
+	if ( $parse_only=="p" ) {
+		$header=array('Name_submitted', 'Family', 'Genus', 'Specific_epithet', 'Infraspecific_rank', 'Infraspecific_epithet', 'Infraspecific_rank_2', 'Infraspecific_epithet_2', 'Author', 'Annotations', 'Unmatched_terms');
+	}
+	# Prepend ID field to each line if requested
 	if (isset($count)) {
 		array_unshift($header,"ID");
 	}
+	
 
 	$outfh = fopen($outfile, 'w') or die("can't open outputfile");
 	fputcsv($outfh, $header, $delim);
@@ -86,7 +94,7 @@
 
 		$result=$ta->getData();
 
-		if ( $matches!="a" ) 	{	
+		if ( $matches!="a" && $parse_only!="p") {	
 		// Keep best match only
 			$sort = array();			
 			foreach($result as $k=>$v) {

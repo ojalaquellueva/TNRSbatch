@@ -66,27 +66,32 @@ if ( !$d ) {
 	$d = 't';
 }
 
+# Set processing mode
+if ( !$mode ) {
+	$mode = '';		# no parameter: default $mode='resolve'
+} else {
+	if ( $mode eq 'parse' ) {
+		$mode = '-p p';
+	} else {
+		$mode = '';	# default: $mode='resolve'
+	}
+} 
+
 # Set match mode
 if ( !$matches ) {
 	$matches = '-m b';		# no parameter: default $matches='best'
 } else {
-	if ( $matches == 'all' ) {
+	if ( $matches eq 'all' ) {
 		$matches = '-m a';
 	} else {
 		$matches = '-m b';	# default:  $matches='best'
 	}
 } 
 
-# Set processing mode
-if ( !$mode ) {
-	$mode = '';		# no parameter: default $mode='resolve'
-} else {
-	if ( $mode == 'parse' ) {
-		$mode = '-p parse';
-	} else {
-		$mode = '';	# default: $mode='resolve'
-	}
-} 
+# Reset other options if parse-only
+if ( $mode eq '-p p' ) {
+	$matches = '';
+}
 
 #Check for valid delimiter
 if ( ( $d ne 't' ) && ( $d ne 'c' ) ) {
@@ -234,7 +239,7 @@ sub _generate_mfconfig {
 		my $operation =
 		  "$tmpfolder/out_$i.txt: $tmpfolder/names/in_$i.txt \$TNRSBIN\n"; #Line 1: output and input files
 		$operation .=
-"\t\$TNRSBIN -f $tmpfolder/names/in_$i.txt -s $sources -l $classification $matches $mode -o $tmpfolder/out_$i.txt -d $d\n\n"; #Line 2: command
+"\t\$TNRSBIN $mode $matches -f $tmpfolder/names/in_$i.txt -s $sources -l $classification -o $tmpfolder/out_$i.txt -d $d\n\n"; #Line 2: command
 		$cmd = $cmd . $operation;
 		$filelist .= "$tmpfolder/out_$i.txt ";
 	}
