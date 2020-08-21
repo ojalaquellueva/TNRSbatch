@@ -4,15 +4,30 @@
 	* Config File
 	*/
 
+	// ABSOLUTE path to directory where DB config file is kept
+	// Keep OUTSIDE this repo!
+	$DB_CONFIG_PATH="/home/boyle/bien/tnrs/config/";
+	$DB_CONFIG_FILE="db_config.php";	// Name of DB config file
+	
+	// Load DB host, name, user and pwd from config file
+	$config_file = $DB_CONFIG_PATH . $DB_CONFIG_FILE;
+	require $config_file;
+	
+	// Rename to prevent potential name collisions
+	$TNRS_DB = $DB;
+	$TNRS_HOST = $HOST;
+	$TNRS_USER = $USER;
+	$TNRS_PWD = $PWD;
+
 	$authorities = array(
 		'default' => array(
 			  'db_type' => 'mysql'
-			, 'username'=> 'tnrs'
-			, 'pass' => 'tnrs_read'
-			, 'db_name'=> 'tnrs4'
+			, 'username'=> $TNRS_USER
+			, 'pass' => $TNRS_PWD
+			, 'db_name'=> $TNRS_DB
 			, 'name' => 'default database'
 			, 'id' => 1
-			, 'host' => 'localhost'
+			, 'host' => $TNRS_HOST
 			, 'cache_flag' => 0
 		)
 	);
