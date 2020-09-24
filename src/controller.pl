@@ -21,6 +21,9 @@ if ( !$binpath ) {
 my $BINARY          = "$binpath/taxamatch_superbatch.php";
 my $CONSOLIDATE_SCR = "$binpath/consolidator.pl";
 
+# Master directory where all content saved
+my $tmpfoldermaster = "/tmp/tnrs/";
+
 my $infile  = '';    #Input file
 my $nbatch  = '';    #Number of batches
 my @sources = '';    #Sources, comma separate
@@ -46,12 +49,14 @@ GetOptions(
 @sources = split( /,/, join( ',', @sources ) );
 my $sources = join ',', @sources;
 
-#The temporary folder needs to be in the /tmp directory (see the function _clean)
+#The temporary folder needs to be in the /tmp directory 
+# (see the function _clean)
+# mkdir "/tmp/tnrs/" unless -d "/tmp/tnrs/"
 my $tmpfolder =
-  "/tmp/" . time() . int( rand(10000) );    #Create a temporary folder
+  $tmpfoldermaster . time() . int( rand(10000) );    #Create a temporary folder
 
 while ( -e $tmpfolder ) {    #If a folder with that name already exists
-	$tmpfolder = "/tmp/" . time() . int( rand(10000) );    #Try another name
+	$tmpfolder = $tmpfoldermaster . time() . int( rand(10000) );    #Try another name
 }
 
 #If no output file name given
