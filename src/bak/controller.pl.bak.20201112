@@ -153,7 +153,7 @@ sub process {
 		my $pid;    #Primary id: the original id, if present
 		if ( $name =~ m/\|/ ) {
 			( $pid, $name ) = ( split /\|/, $name );
-			$name =~ s/^\s+//;	# trim leading whitespace from name
+			$name =~ s/^\s+//;
 			if ( exists $pids{$name} ) {
 				my @k = @{ $pids{$name} };
 				unshift @k, $pid;

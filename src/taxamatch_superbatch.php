@@ -63,7 +63,6 @@
 		array_unshift($header,"ID");
 	}
 	
-
 	$outfh = fopen($outfile, 'w') or die("can't open outputfile");
 	fputcsv($outfh, $header, $delim);
 	
@@ -85,6 +84,12 @@
         $tm->set('parse_only', $parse_only);	
 
 		$name=escapeshellarg($field[0]);		
+		
+		// Hack to remove embedded commas until I can find and fix
+		// root issue in core service. That allows name to be matched,
+		// but will no longer join back to original data. Must use
+		// user id to guarantee successful back-join of all names
+		$name = str_replace(',', ' ', $name);
 	
 		if ( $tm->process( $name, $search_mode, $cache ) && ! $parse_only) {
 			$tm->generateResponse($cache);
@@ -119,5 +124,6 @@
 		$count++;	
 	}
 	fclose($outfh);
+
 ?>
 
