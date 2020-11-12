@@ -91,7 +91,7 @@ d |  Delimiter to use for output file [comma*,tab]
 **Example replicating default online TNRS settings**  
 
 ```
-./controller.pl -in "../example_data/testfile"  -out "../example_data/testfile_scrubbed.csv" -sources "tropicos,ildis,gcc,tpl,usda,ncbi" -class tropicos -nbatch 10 -d t 
+./controller.pl -in "../data/testfile"  -out "../data/testfile_scrubbed.csv" -sources "tropicos,ildis,gcc,tpl,usda,ncbi" -class tropicos -nbatch 10 -d t 
 ```
 
 #### 2. Run the core batch application as a standalone  
