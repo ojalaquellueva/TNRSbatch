@@ -656,8 +656,12 @@ class TnrsAggregator {
 							$match["Accepted_name"]=$accepted_name->scientific_name;
 
 							$match["Accepted_name_author"]=$accepted_name->author;
-							$match["Accepted_name_url"]=$name_source_data[$match["Accepted_name_id"]][$sid]['url'];
-							$match["Accepted_name_lsid"]=$name_source_data[$match["Accepted_name_id"]][$sid]['lsid'];
+							//$match["Accepted_name_url"]=$name_source_data[$match["Accepted_name_id"]][$sid]['url'];
+							// Solution to above, which was occasionally throwing "Undefined offset" error:
+							$match["Accepted_name_url"] = isset($name_source_data[$match["Accepted_name_id"]][$sid]['url'])?$name_source_data[$match["Accepted_name_id"]][$sid]['url']:"";
+							
+							// The following was also throwing the same error, but this value is no longer used any way, so commenting out
+							//$match["Accepted_name_lsid"]=$name_source_data[$match["Accepted_name_id"]][$sid]['lsid'];
 							$match["Accepted_name_rank"]=$accepted_name->nameRank;
 							$match["Accepted_family"]=isset($classification_family[$match["Accepted_name_id"]]) ? $classification_family[$match["Accepted_name_id"]] : "";
 						}
