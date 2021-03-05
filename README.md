@@ -107,7 +107,7 @@ php taxamatch_superbatch.php -s <sources> -f <input_file> -o <output_file> [-l <
 **Example**
 
 ```
-php taxamatch_superbatch.php -s "tropicos,ildis,gcc,tpl,usda,ncbi" -f "../example_data/testfile.small" -o "../data/testfile.small_scrubbed.csv" 
+php taxamatch_superbatch.php -s "tropicos,ildis,gcc,tpl,usda,ncbi" -f "../data/testfile.small" -o "../data/testfile.small_scrubbed.csv" 
 ```
 
 

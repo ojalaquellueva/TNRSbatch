@@ -252,7 +252,9 @@
 				$target_ngram[$ngram]++;
 			}
 
-			while (list($ngram, $source_ngram_count) = each($source_ngram)){
+//			while (list($ngram, $source_ngram_count) = each($source_ngram)){
+			// Replace each() function, deprecated as of PHP 8.0:
+			foreach($source_ngram as $ngram => $source_ngram_count) {
 				if (array_key_exists($ngram, $target_ngram)) {
 					$target_ngram_count = $target_ngram[$ngram];
 					$match_count+=$target_ngram_count < $source_ngram_count ? $target_ngram_count : $source_ngram_count;
