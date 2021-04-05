@@ -89,9 +89,11 @@ d |  Delimiter to use for output file [comma*,tab]
  
 
 **Example replicating default online TNRS settings**  
+* Run from from directory src/, or add command controller.pl to your path, or prepend absolute paths to command and input/output files.
+* Depending on your configuration, may need to run as sudo
 
 ```
-./controller.pl -in "../data/testfile"  -out "../data/testfile_scrubbed.csv" -sources "tropicos,ildis,gcc,tpl,usda,ncbi" -class tropicos -nbatch 10 -d t 
+./controller.pl -in "../data/testfile"  -out "../data/testfile_scrubbed.csv" -sources "tropicos,tpl,usda" -class tropicos -nbatch 10 -d t 
 ```
 
 #### 2. Run the core batch application as a standalone  
@@ -105,9 +107,10 @@ php taxamatch_superbatch.php -s <sources> -f <input_file> -o <output_file> [-l <
 ```
 
 **Example**
+* Run from from directory src/, or add command taxamatch_superbatch.php to your path, or prepend absolute paths to command and input/output files.
 
 ```
-php taxamatch_superbatch.php -s "tropicos,ildis,gcc,tpl,usda,ncbi" -f "../data/testfile.small" -o "../data/testfile.small_scrubbed.csv" 
+php taxamatch_superbatch.php -s "tropicos,tpl,usda" -f "../data/testfile.small" -o "../data/testfile.small_scrubbed.csv" 
 ```
 
 

@@ -4,3 +4,9 @@
 	from /usr/local/bin/parserver:23:in `load'
 	from /usr/local/bin/parserver:23:in `<main>'
 Running parser service on 127.0.0.1:4334, output type is 'json'
+/var/lib/gems/2.4.0/gems/biodiversity-3.5.1/bin/parserver:78:in `initialize': Address already in use - bind(2) for "127.0.0.1" port 4334 (Errno::EADDRINUSE)
+	from /var/lib/gems/2.4.0/gems/biodiversity-3.5.1/bin/parserver:78:in `open'
+	from /var/lib/gems/2.4.0/gems/biodiversity-3.5.1/bin/parserver:78:in `<top (required)>'
+	from /usr/local/bin/parserver:23:in `load'
+	from /usr/local/bin/parserver:23:in `<main>'
+Running parser service on 127.0.0.1:4334, output type is 'json'
