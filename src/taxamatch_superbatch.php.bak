@@ -1,33 +1,12 @@
 #! /usr/bin/php
 <?php
-
 	ini_set("memory_limit","1000M");
-	
-	// Prevent escapeshellarg() from stripping accented characters
-	setlocale(LC_CTYPE, "en_US.UTF-8");
 
 	require_once('config.php');
 	require_once('classes/class.mysqli_database.php');
 	require_once('classes/class.misc.php');
 	require_once('classes/class.taxamatch.php');
 	require_once('classes/class.tnrs_aggregator.php');
-	
-	// Array for converting accented chars to plain ascii
-	$normalizeChars = array(
-		'Š'=>'S', 'š'=>'s', 'Ð'=>'Dj','Ž'=>'Z', 'ž'=>'z', 'À'=>'A', 'Á'=>'A', 
-		'Â'=>'A', 'Ã'=>'A', 'Ä'=>'A', 'Å'=>'A', 'Æ'=>'A', 'Ç'=>'C', 'È'=>'E', 
-		'É'=>'E', 'Ê'=>'E', 'Ë'=>'E', 'Ì'=>'I', 'Í'=>'I', 'Î'=>'I', 'Ï'=>'I', 
-		'Ñ'=>'N', 'Ń'=>'N', 'Ò'=>'O', 'Ó'=>'O', 'Ô'=>'O', 'Õ'=>'O', 'Ö'=>'O', 
-		'Ø'=>'O', 'Ù'=>'U', 'Ú'=>'U', 'Û'=>'U', 'Ü'=>'U', 'Ý'=>'Y', 'Þ'=>'B', 
-		'ß'=>'Ss','à'=>'a', 'á'=>'a', 'â'=>'a', 'ã'=>'a', 'ä'=>'a',	'å'=>'a', 
-		'æ'=>'a', 'ç'=>'c', 'è'=>'e', 'é'=>'e', 'ê'=>'e', 'ë'=>'e', 'ì'=>'i', 
-		'í'=>'i', 'î'=>'i', 'ï'=>'i', 'ð'=>'o', 'ñ'=>'n', 'ń'=>'n', 'ò'=>'o', 
-		'ó'=>'o', 'ô'=>'o', 'õ'=>'o', 'ö'=>'o', 'ø'=>'o', 'ù'=>'u', 'ú'=>'u', 
-		'û'=>'u', 'ü'=>'u', 'ý'=>'y', 'ý'=>'y', 'þ'=>'b', 'ÿ'=>'y', 'ƒ'=>'f',
-		'ă'=>'a', 'î'=>'i', 'â'=>'a', 'ș'=>'s', 'ț'=>'t', 'Ă'=>'A', 'Î'=>'I', 
-		'Â'=>'A', 'Ș'=>'S', 'Ț'=>'T'
-	);
-
 
 	///////////////////////////////////////////////////////////////
 	// Command line options (*Default):
@@ -79,7 +58,6 @@
 	if ( $parse_only=="p" ) {
 		$header=array('Name_submitted', 'Family', 'Genus', 'Specific_epithet', 'Infraspecific_rank', 'Infraspecific_epithet', 'Infraspecific_rank_2', 'Infraspecific_epithet_2', 'Author', 'Annotations', 'Unmatched_terms');
 	}
-
 	# Prepend ID field to each line if requested
 	if (isset($count)) {
 		array_unshift($header,"ID");
@@ -91,12 +69,11 @@
 	$handle = fopen($file, "r");
 		
 	while (($field = fgetcsv($handle, 1000, ",")) !== FALSE) {
+			if (!isset($field[0]) || $field[0] == '') {
+				continue;
+			}
 
-		if (!isset($field[0]) || $field[0] == '') {
-			continue;
-		}
-
-		$ta = new TnrsAggregator($db);
+		$ta=new TnrsAggregator($db);
         $tm = new Taxamatch($db);
         $tm->set('debug_flag','');
         $tm->set('output_type','');
@@ -108,18 +85,12 @@
 
 		$name=escapeshellarg($field[0]);		
 		
-		// Hacks to remove/fix embedded commas & apostrophes until I can find 
-		// and fix root issue in core service. That allows name to be matched,
+		// Hack to remove embedded commas until I can find and fix
+		// root issue in core service. That allows name to be matched,
 		// but will no longer join back to original data. Must use
 		// user id to guarantee successful back-join of all names
 		$name = str_replace(',', ' ', $name);
-		$name = str_replace("\\'", "", $name);
-		$name = str_replace("\'", "", $name);
-		$name = str_replace("''", "'", $name);
-
-		# Replace accented characters with plain ascii equivalent
-		$name = strtr($name, $normalizeChars);
-		
+	
 		if ( $tm->process( $name, $search_mode, $cache ) && ! $parse_only) {
 			$tm->generateResponse($cache);
 		}
