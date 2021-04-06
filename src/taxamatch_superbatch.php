@@ -108,10 +108,12 @@
 
 		$name=escapeshellarg($field[0]);		
 		
-		// Hacks to remove/fix embedded commas & apostrophes until I can find 
-		// and fix root issue in core service. That allows name to be matched,
-		// but will no longer join back to original data. Must use
-		// user id to guarantee successful back-join of all names
+		// Remove/fix embedded commas & apostrophes 
+		// Sequence is critical!
+		// Handling here until I can find and fix root issue in core 
+		// service. These fixes mean that name_submitted will no longer 
+		// join back to original data. Must use user id to guarantee 
+		// successful back-join of all names
 		$name = str_replace(',', ' ', $name);
 		$name = str_replace("\\'", "", $name);
 		$name = str_replace("\'", "", $name);
