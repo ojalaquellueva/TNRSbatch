@@ -103,6 +103,13 @@ if ( ( $d ne 't' ) && ( $d ne 'c' ) ) {
 	print("Invalid output file delimiter d; must be 't' or 'c'\n"); exit 1;
 }
 
+# Check if file ends in newline char; add one if not
+my $endsnl = `tail -n 1 "$infile" | wc --lines`;
+
+if ( $endsnl == 0 ) { 
+	system("echo '' >> $infile");
+}
+
 #Let the magic begin
 process( $infile, $nbatch, $tmpfolder, $outfile );
 

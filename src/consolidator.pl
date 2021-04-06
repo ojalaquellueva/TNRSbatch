@@ -1,6 +1,6 @@
 #! /usr/bin/perl
-#consolidator.pl: Consolidator for the iPlant TNRS batch service.
-#Author: Naim Matasci <nmatasci@iplantcollaborative.org>
+# consolidator.pl: Consolidator for the iPlant TNRS batch service.
+# Author: Naim Matasci <nmatasci@iplantcollaborative.org>
 #
 # The contents of this file are subject to the terms listed in the LICENSE file you received with this code.
 # Copyright (c) 2012, The Arizona Board of Regents on behalf of
